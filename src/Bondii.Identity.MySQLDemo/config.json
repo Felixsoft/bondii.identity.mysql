@@ -1,0 +1,10 @@
+{
+  "AppSettings": {
+    "SiteTitle": "Bondii.Identity.MySQLDemo"
+  },
+  "Data": {
+    "DefaultConnection": {
+      "ConnectionString": "User Id=root;Password=password2015!!;Host=localhost;Database=identitymysql;"
+    }
+  }
+}
