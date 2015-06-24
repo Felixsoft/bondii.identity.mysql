@@ -28,7 +28,7 @@ namespace Bondii.Identity.MySQL
         /// <param name="connectionStringName"></param>
         public MySQLDatabase(string connectionStringName)
         {
-            string connectionString = "User Id=root;Password=password2015!;Host=localhost;Database=identitymysql"; //TODO: ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+            string connectionString = "User Id=user2015;Password=password2015;Host=localhost;Database=identitymysql"; //TODO: ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
             _connection = new MySqlConnection(connectionString);
         }
 
