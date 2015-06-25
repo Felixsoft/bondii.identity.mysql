@@ -10,7 +10,7 @@ namespace Bondii.Identity.MySQL
     /// <summary>
     /// Class that implements the key ASP.NET Identity role store iterfaces
     /// </summary>
-    public class RoleStore<TRole> : 
+    public class RoleStore<TRole> :
         IQueryableRoleStore<TRole>
         where TRole : IdentityRole
     {
@@ -64,7 +64,7 @@ namespace Bondii.Identity.MySQL
 
             roleTable.Insert(role);
             //TODO: Return correct IdentityResult
-            return Task.FromResult<IdentityResult>(null);
+            return Task.FromResult<IdentityResult>(IdentityResult.Success);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Bondii.Identity.MySQL
 
             roleTable.Delete(role.Id);
             //TODO: Return correct IdentityResult.
-            return Task.FromResult<IdentityResult>(null);
+            return Task.FromResult<IdentityResult>(IdentityResult.Success);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Bondii.Identity.MySQL
         public Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken = default(CancellationToken))
         {
             // TODO: Implement.
-            return Task.FromResult<object>(null);
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Bondii.Identity.MySQL
         public Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken = default(CancellationToken))
         {
             // TODO: Implement.
-            return Task.FromResult<object>(null);
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -188,18 +188,18 @@ namespace Bondii.Identity.MySQL
 
             roleTable.Update(role);
             //TODO: Return correct IdentityResult
-            return Task.FromResult<IdentityResult>(null);
+            return Task.FromResult(IdentityResult.Success);
         }
 
         #endregion
 
         public void Dispose()
         {
-            if (Database != null)
-            {
-                Database.Dispose();
-                Database = null;
-            }
+            //if (Database != null)
+            //{
+            //    Database.Dispose();
+            //    Database = null;
+            //}
         }
 
     }

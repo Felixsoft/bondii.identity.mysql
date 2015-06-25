@@ -4,7 +4,7 @@
   },
   "Data": {
     "DefaultConnection": {
-      "ConnectionString": "User Id=user2015;Password=password2015!;Host=localhost;Database=identitymysql;"
+      "ConnectionString": "User Id=user2015;Password=password2015;Host=localhost;Database=identitymysql;"
     }
   }
 }

@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.Framework.ConfigurationModel;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,14 +12,14 @@ namespace Bondii.Identity.MySQL
     /// Class that encapsulates a MySQL database connections 
     /// and CRUD operations
     /// </summary>
-    public class MySQLDatabase : IDisposable
+    public class MySQLDatabase : IDisposable //IdentityDbContext
     {
         private MySqlConnection _connection;
 
         /// Default constructor which uses the "DefaultConnection" connectionString
         /// </summary>
         public MySQLDatabase()
-            : this("DefaultConnection")
+            : this("Data:DefaultConnection:ConnectionString")
         {
         }
 
@@ -28,7 +29,9 @@ namespace Bondii.Identity.MySQL
         /// <param name="connectionStringName"></param>
         public MySQLDatabase(string connectionStringName)
         {
-            string connectionString = "User Id=user2015;Password=password2015;Host=localhost;Database=identitymysql"; //TODO: ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+            var configuration = new Configuration()
+                .AddJsonFile("config.json");
+            string connectionString = configuration[connectionStringName];
             _connection = new MySqlConnection(connectionString);
         }
 

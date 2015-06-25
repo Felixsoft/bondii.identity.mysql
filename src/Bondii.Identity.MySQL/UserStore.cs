@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace Bondii.Identity.MySQL
 {
-
     /// <summary>
     /// Class that implements the key ASP.NET Identity user store iterfaces
     /// </summary>
-    public class UserStore<TUser> : 
+    public class UserStore<TUser> :
         IUserLoginStore<TUser>,
         IUserClaimStore<TUser>,
         IUserRoleStore<TUser>,
@@ -31,7 +30,7 @@ namespace Bondii.Identity.MySQL
         private UserRolesTable userRolesTable;
         private UserClaimsTable<TUser> userClaimsTable;
         private UserLoginsTable userLoginsTable;
-        public MySQLDatabase Database { get; private set; }
+        public MySQLDatabase Database { get; set; }
 
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace Bondii.Identity.MySQL
         /// </summary>
         public UserStore()
         {
-            new UserStore<TUser>(new MySQLDatabase());
+            new UserStore<IdentityUser>(new MySQLDatabase());
         }
 
         /// <summary>
@@ -209,8 +208,8 @@ namespace Bondii.Identity.MySQL
             }
 
             List<TUser> users = userClaimsTable.GetUsersForClaim(claim);
-            
-            
+
+
 
             if (users != null)
             {
@@ -512,7 +511,7 @@ namespace Bondii.Identity.MySQL
         {
 
             //TODO: Implement and return correct string.
-            return Task.FromResult<string>(null);
+            return Task.FromResult(user.Email);
 
         }
 
@@ -554,7 +553,7 @@ namespace Bondii.Identity.MySQL
         /// <returns></returns>
         public Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.FromResult<object>(null);
+            return Task.FromResult(0);
         }
 
 
@@ -750,7 +749,7 @@ namespace Bondii.Identity.MySQL
 
             // TODO: Correctly return IdentityResult
 
-            return Task.FromResult<IdentityResult>(null);
+            return Task.FromResult(IdentityResult.Success);
         }
 
         /// <summary>
@@ -767,7 +766,7 @@ namespace Bondii.Identity.MySQL
 
             // TODO: Correctly return IdentityResult
 
-            return Task.FromResult<IdentityResult>(null);
+            return Task.FromResult(IdentityResult.Success);
         }
 
         /// <summary>
@@ -806,9 +805,9 @@ namespace Bondii.Identity.MySQL
             List<TUser> result = userTable.GetUserByName(userName) as List<TUser>;
 
             // Should I throw if > 1 user?
-            if (result != null && result.Count == 1)
+            if (result.Any())
             {
-                return Task.FromResult<TUser>(result[0]);
+                return Task.FromResult<TUser>(result.FirstOrDefault());
             }
 
             return Task.FromResult<TUser>(null);
@@ -816,22 +815,54 @@ namespace Bondii.Identity.MySQL
 
         public Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.FromResult<string>(null);
+            return Task.FromResult<string>(user.UserName);
         }
 
         public Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.FromResult<string>(null);
+            if (!string.IsNullOrEmpty(user.Id))
+            {
+                return Task.FromResult(user.Id);
+            }
+            else if (!string.IsNullOrEmpty(user.UserName))
+            {
+                List<TUser> result = userTable.GetUserByName(user.UserName);
+                if (result.Any())
+                    return Task.FromResult(result.FirstOrDefault().Id);
+            }
+            else if (!string.IsNullOrEmpty(user.Email))
+            {
+                List<TUser> result = userTable.GetUserByEmail(user.Email);
+                if (result.Any())
+                    return Task.FromResult(result.FirstOrDefault().Id);
+            }
+            return Task.FromResult("");
         }
 
         public Task<string> GetUserNameAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.FromResult<string>(null);
+            if (!string.IsNullOrEmpty(user.UserName))
+            {
+                return Task.FromResult(user.UserName);
+            }
+            else if (!string.IsNullOrEmpty(user.Id))
+            {
+                TUser result = userTable.GetUserById(user.Id);
+                if (result != null)
+                    return Task.FromResult(result.UserName);
+            }
+            else if (!string.IsNullOrEmpty(user.Email))
+            {
+                List<TUser> result = userTable.GetUserByEmail(user.Email);
+                if (result.Any())
+                    return Task.FromResult(result.FirstOrDefault().UserName);
+            }
+            return Task.FromResult("");
         }
 
         public Task SetNormalizedUserNameAsync(TUser user, string normalizedName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.FromResult<string>(null);
+            return Task.FromResult(0);
         }
 
         public Task SetUserNameAsync(TUser user, string userName, CancellationToken cancellationToken = default(CancellationToken))
@@ -841,7 +872,7 @@ namespace Bondii.Identity.MySQL
 
         public Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.FromResult<IdentityResult>(null);
+            return Task.FromResult(IdentityResult.Success);
         }
 
         /// <summary>
@@ -866,11 +897,11 @@ namespace Bondii.Identity.MySQL
 
         public void Dispose()
         {
-            if (Database != null)
-            {
-                Database.Dispose();
-                Database = null;
-            }
+            //if (Database != null)
+            //{
+            //    Database.Dispose();
+            //    Database = null;
+            //}
         }
 
     }

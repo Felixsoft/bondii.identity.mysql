@@ -55,9 +55,13 @@ namespace Bondii.Identity.MySQLDemo
             // Add Identity services to the services container.
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddRoleStore<MySQL.RoleStore<IdentityRole>>()
-                .AddUserStore<MySQL.UserStore<IdentityUser>>()
-                
+                .AddUserStore<MySQL.UserStore<ApplicationUser>>()
+
                 .AddDefaultTokenProviders();
+
+            //services.AddEntityFramework().AddDbContext<MySQLDatabase>();
+
+            services.AddInstance(new MySQLDatabase());
 
             // Configure the options for the authentication middleware.
             // You can add options for Google, Twitter and other middleware as shown below.
@@ -73,7 +77,7 @@ namespace Bondii.Identity.MySQLDemo
             //    options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
             //    options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
             //});
-            
+
             // Add MVC services to the services container.
             services.AddMvc();
 
